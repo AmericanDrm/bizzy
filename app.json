@@ -1,0 +1,47 @@
+{
+  "expo": {
+    "name": "Bizzy",
+    "slug": "bizzy",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "bizzy",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": false,
+    "splash": {
+      "image": "./assets/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#1B4D6E"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.bizzy.app"
+    },
+    "android": {
+      "package": "com.bizzy.app",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/icon.png",
+        "backgroundColor": "#1B4D6E"
+      }
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-splash-screen",
+      [
+        "@rnmapbox/maps",
+        {
+          "RNMapboxMapsImpl": "mapbox",
+          "RNMapboxMapsDownloadToken": "sk.eyJ1IjoiaXJvbnNrYTcxMjkiLCJhIjoiY21tZjRsNHo2MDR4ODJzcTFtOW81djRjNyJ9.RXSH_mbrSZW_IStvwVL9Bg"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

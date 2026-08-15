@@ -1,0 +1,1375 @@
+
+============================================================
+TABLE: address_equipment
+  [DELETE] Org members can delete address equipment | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = address_equipment.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [INSERT] Org members can insert address equipment | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = address_equipment.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [SELECT] Org members can view address equipment | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = address_equipment.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+
+============================================================
+TABLE: address_suggestions_cache
+  [INSERT] Members can insert address cache | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = address_suggestions_cache.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [UPDATE] Members can update address cache | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = address_suggestions_cache.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = address_suggestions_cache.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [SELECT] Members can view address cache | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = address_suggestions_cache.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+
+============================================================
+TABLE: ai_prompt_templates
+  [DELETE] Admins can delete AI prompt templates | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = ai_prompt_templates.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text])))))
+  [INSERT] Admins can insert AI prompt templates | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = ai_prompt_templates.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text])))))
+  [UPDATE] Admins can update AI prompt templates | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = ai_prompt_templates.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text])))))
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = ai_prompt_templates.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text])))))
+  [SELECT] Members can view AI prompt templates | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = ai_prompt_templates.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+
+============================================================
+TABLE: app_settings
+  [SELECT] Authenticated users can read app settings | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (( SELECT auth.role() AS role) = 'authenticated'::text)
+
+============================================================
+TABLE: app_versions
+  [SELECT] Authenticated users can read app versions | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (( SELECT auth.role() AS role) = 'authenticated'::text)
+
+============================================================
+TABLE: appointment_reminders
+  [DELETE] Org admins can delete appointment reminders | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (organization_id IN ( SELECT om.organization_id  FROM organization_members om WHERE (om.user_id = ( SELECT auth.uid() AS uid))))
+  [INSERT] Org admins can insert appointment reminders | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (organization_id IN ( SELECT om.organization_id  FROM organization_members om WHERE (om.user_id = ( SELECT auth.uid() AS uid))))
+  [UPDATE] Org admins can update appointment reminders | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (organization_id IN ( SELECT om.organization_id  FROM organization_members om WHERE (om.user_id = ( SELECT auth.uid() AS uid))))
+    WITH CHECK: (organization_id IN ( SELECT om.organization_id  FROM organization_members om WHERE (om.user_id = ( SELECT auth.uid() AS uid))))
+  [SELECT] Org members can view appointment reminders | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (organization_id IN ( SELECT om.organization_id  FROM organization_members om WHERE (om.user_id = ( SELECT auth.uid() AS uid))))
+
+============================================================
+TABLE: break_entries
+  [DELETE] admins_delete | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_admin(organization_id)
+  [INSERT] members_insert | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: is_org_member(organization_id)
+  [SELECT] members_select | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+  [UPDATE] members_update | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+    WITH CHECK: is_org_member(organization_id)
+
+============================================================
+TABLE: break_policies
+  [DELETE] Admins and managers can delete break policies | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (organization_id IN ( SELECT om.organization_id  FROM organization_members om WHERE ((om.user_id = ( SELECT auth.uid() AS uid)) AND (om.role = ANY (ARRAY['owner'::text, 'admin'::text, 'manager'::text])))))
+  [INSERT] Admins and managers can insert break policies | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (organization_id IN ( SELECT om.organization_id  FROM organization_members om WHERE ((om.user_id = ( SELECT auth.uid() AS uid)) AND (om.role = ANY (ARRAY['owner'::text, 'admin'::text, 'manager'::text])))))
+  [UPDATE] Admins and managers can update break policies | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (organization_id IN ( SELECT om.organization_id  FROM organization_members om WHERE ((om.user_id = ( SELECT auth.uid() AS uid)) AND (om.role = ANY (ARRAY['owner'::text, 'admin'::text, 'manager'::text])))))
+    WITH CHECK: (organization_id IN ( SELECT om.organization_id  FROM organization_members om WHERE ((om.user_id = ( SELECT auth.uid() AS uid)) AND (om.role = ANY (ARRAY['owner'::text, 'admin'::text, 'manager'::text])))))
+  [SELECT] Org members can view break policies | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (organization_id IN ( SELECT om.organization_id  FROM organization_members om WHERE (om.user_id = ( SELECT auth.uid() AS uid))))
+
+============================================================
+TABLE: broadcast_templates
+  [DELETE] Org members can delete broadcast templates | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (organization_id IN ( SELECT om.organization_id  FROM organization_members om WHERE (om.user_id = ( SELECT auth.uid() AS uid))))
+  [INSERT] Org members can insert broadcast templates | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (organization_id IN ( SELECT om.organization_id  FROM organization_members om WHERE (om.user_id = ( SELECT auth.uid() AS uid))))
+  [SELECT] Org members can select broadcast templates | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (organization_id IN ( SELECT om.organization_id  FROM organization_members om WHERE (om.user_id = ( SELECT auth.uid() AS uid))))
+  [UPDATE] Org members can update broadcast templates | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (organization_id IN ( SELECT om.organization_id  FROM organization_members om WHERE (om.user_id = ( SELECT auth.uid() AS uid))))
+    WITH CHECK: (organization_id IN ( SELECT om.organization_id  FROM organization_members om WHERE (om.user_id = ( SELECT auth.uid() AS uid))))
+
+============================================================
+TABLE: business_settings
+  [DELETE] admins_delete | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_admin(organization_id)
+  [INSERT] admins_insert | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: is_org_admin(organization_id)
+  [UPDATE] admins_update | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_admin(organization_id)
+    WITH CHECK: is_org_admin(organization_id)
+  [SELECT] members_select | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+
+============================================================
+TABLE: calendar_sync_settings
+  [DELETE] Users can delete own sync settings | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (user_id = ( SELECT auth.uid() AS uid))
+  [INSERT] Users can insert own sync settings | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (user_id = ( SELECT auth.uid() AS uid))
+  [UPDATE] Users can update own sync settings | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (user_id = ( SELECT auth.uid() AS uid))
+  [SELECT] Users can view own sync settings | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (user_id = ( SELECT auth.uid() AS uid))
+
+============================================================
+TABLE: call_log
+  [DELETE] Users can delete call logs in their org | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (organization_id IN ( SELECT om.organization_id  FROM organization_members om WHERE (om.user_id = ( SELECT auth.uid() AS uid))))
+  [INSERT] Users can insert call logs in their org | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (organization_id IN ( SELECT om.organization_id  FROM organization_members om WHERE (om.user_id = ( SELECT auth.uid() AS uid))))
+  [UPDATE] Users can update call logs in their org | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (organization_id IN ( SELECT om.organization_id  FROM organization_members om WHERE (om.user_id = ( SELECT auth.uid() AS uid))))
+    WITH CHECK: (organization_id IN ( SELECT om.organization_id  FROM organization_members om WHERE (om.user_id = ( SELECT auth.uid() AS uid))))
+  [SELECT] Users can view call logs in their org | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (organization_id IN ( SELECT om.organization_id  FROM organization_members om WHERE (om.user_id = ( SELECT auth.uid() AS uid))))
+
+============================================================
+TABLE: caller_id_settings
+  [DELETE] Users can delete their own caller ID settings | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (user_id = ( SELECT auth.uid() AS uid))
+  [INSERT] Users can insert their own caller ID settings | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (user_id = ( SELECT auth.uid() AS uid))
+  [UPDATE] Users can update their own caller ID settings | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (user_id = ( SELECT auth.uid() AS uid))
+    WITH CHECK: (user_id = ( SELECT auth.uid() AS uid))
+  [SELECT] Users can view their own caller ID settings | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (user_id = ( SELECT auth.uid() AS uid))
+
+============================================================
+TABLE: checklist_item_photos
+  [DELETE] Org members can delete checklist item photos | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (organization_id IN ( SELECT om.organization_id  FROM organization_members om WHERE (om.user_id = ( SELECT auth.uid() AS uid))))
+  [INSERT] Org members can insert checklist item photos | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (organization_id IN ( SELECT om.organization_id  FROM organization_members om WHERE (om.user_id = ( SELECT auth.uid() AS uid))))
+  [SELECT] Org members can view checklist item photos | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (organization_id IN ( SELECT om.organization_id  FROM organization_members om WHERE (om.user_id = ( SELECT auth.uid() AS uid))))
+
+============================================================
+TABLE: checklist_template_items
+  [INSERT] Members can manage template items - INSERT | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = checklist_template_items.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [SELECT] Members can manage template items - SELECT | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = checklist_template_items.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [UPDATE] Members can manage template items - UPDATE | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = checklist_template_items.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = checklist_template_items.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [DELETE] Non-basic members can delete template items | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (organization_id IN ( SELECT organization_members.organization_id  FROM organization_members WHERE ((organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text, 'manager'::text])))))
+
+============================================================
+TABLE: checklist_templates
+  [SELECT] Members can view templates | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = checklist_templates.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [INSERT] Non-basic users can create templates | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = checklist_templates.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'manager'::text, 'member'::text])))))
+  [DELETE] Non-basic users can delete templates | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (organization_id IN ( SELECT organization_members.organization_id  FROM organization_members WHERE ((organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text, 'manager'::text])))))
+  [UPDATE] Users can update templates | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = checklist_templates.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = checklist_templates.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+
+============================================================
+TABLE: client_address_service_windows
+  [DELETE] Org admins and managers can delete service windows | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = client_address_service_windows.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text, 'manager'::text])))))
+  [INSERT] Org admins and managers can insert service windows | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = client_address_service_windows.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text, 'manager'::text])))))
+  [UPDATE] Org admins and managers can update service windows | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = client_address_service_windows.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text, 'manager'::text])))))
+  [SELECT] Org members can view service windows | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = client_address_service_windows.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+
+============================================================
+TABLE: client_addresses
+  [DELETE] admins_delete | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_admin(organization_id)
+  [INSERT] members_insert | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (EXISTS ( SELECT 1  FROM (clients c  JOIN organization_members om ON ((om.organization_id = c.organization_id))) WHERE ((c.id = client_addresses.client_id) AND (om.user_id = ( SELECT auth.uid() AS uid)))))
+  [SELECT] members_select | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+  [UPDATE] members_update | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+    WITH CHECK: is_org_member(organization_id)
+
+============================================================
+TABLE: client_categories
+  [DELETE] Org members can delete client_categories | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (organization_id IN ( SELECT om.organization_id  FROM organization_members om WHERE (om.user_id = ( SELECT auth.uid() AS uid))))
+  [INSERT] Org members can insert client_categories | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (organization_id IN ( SELECT om.organization_id  FROM organization_members om WHERE (om.user_id = ( SELECT auth.uid() AS uid))))
+  [SELECT] Org members can select client_categories | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (organization_id IN ( SELECT om.organization_id  FROM organization_members om WHERE (om.user_id = ( SELECT auth.uid() AS uid))))
+
+============================================================
+TABLE: client_equipment
+  [DELETE] Org members can delete client equipment | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = client_equipment.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [INSERT] Org members can insert client equipment | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = client_equipment.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [SELECT] Org members can view client equipment | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = client_equipment.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+
+============================================================
+TABLE: client_job_history
+  [DELETE] admins_delete | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_admin(organization_id)
+  [INSERT] members_insert | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: is_org_member(organization_id)
+  [SELECT] members_select | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+  [UPDATE] members_update | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+    WITH CHECK: is_org_member(organization_id)
+
+============================================================
+TABLE: client_job_quantities
+  [DELETE] Organization members can delete client quantities | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = client_job_quantities.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [INSERT] Organization members can insert client quantities | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = client_job_quantities.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [UPDATE] Organization members can update client quantities | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = client_job_quantities.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = client_job_quantities.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [SELECT] Organization members can view client quantities | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = client_job_quantities.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+
+============================================================
+TABLE: client_pane_type_prices
+  [DELETE] Members can delete client pane type prices in their org | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = client_pane_type_prices.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [INSERT] Members can insert client pane type prices in their org | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = client_pane_type_prices.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [UPDATE] Members can update client pane type prices in their org | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = client_pane_type_prices.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [SELECT] Members can view client pane type prices in their org | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = client_pane_type_prices.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+
+============================================================
+TABLE: client_photos
+  [DELETE] Managers and owners can delete photos | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = client_photos.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'manager'::text])))))
+  [INSERT] Members can create photos | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = client_photos.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [UPDATE] Members can update photos | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = client_photos.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = client_photos.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [SELECT] Members can view photos | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = client_photos.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+
+============================================================
+TABLE: client_portal_accounts
+  [DELETE] org_admins_delete_portal_accounts | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_admin(organization_id)
+  [INSERT] org_admins_insert_portal_accounts | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: is_org_admin(organization_id)
+  [UPDATE] org_admins_update_portal_accounts | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_admin(organization_id)
+    WITH CHECK: is_org_admin(organization_id)
+  [SELECT] org_members_read_portal_accounts | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (is_org_member(organization_id) OR (user_id = ( SELECT auth.uid() AS uid)))
+
+============================================================
+TABLE: client_portal_settings
+  [SELECT] anon_read_enabled_portal_settings | permissive=PERMISSIVE | roles={anon}
+    USING:      (is_enabled = true)
+  [DELETE] org_admins_delete_portal_settings | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_admin(organization_id)
+  [INSERT] org_admins_insert_portal_settings | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: is_org_admin(organization_id)
+  [UPDATE] org_admins_update_portal_settings | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_admin(organization_id)
+    WITH CHECK: is_org_admin(organization_id)
+  [SELECT] org_members_read_portal_settings | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (is_org_member(organization_id) OR (organization_id = get_portal_org_id()))
+
+============================================================
+TABLE: client_property_qualities
+  [DELETE] Org members can delete client_property_qualities | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = client_property_qualities.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [INSERT] Org members can insert client_property_qualities | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = client_property_qualities.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [SELECT] Org members can select client_property_qualities | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = client_property_qualities.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [UPDATE] Org members can update client_property_qualities | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = client_property_qualities.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+
+============================================================
+TABLE: client_reminders
+  [INSERT] Members can create client reminders | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = client_reminders.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [UPDATE] Members can update client reminders | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = client_reminders.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = client_reminders.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [SELECT] Members can view client reminders | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = client_reminders.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [DELETE] Owners and admins can delete client reminders | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = client_reminders.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text])))))
+
+============================================================
+TABLE: client_unit_quantities
+  [DELETE] Org members can delete client unit quantities | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = client_unit_quantities.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [INSERT] Org members can insert client unit quantities | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = client_unit_quantities.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [UPDATE] Org members can update client unit quantities | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = client_unit_quantities.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = client_unit_quantities.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [SELECT] Org members can view client unit quantities | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = client_unit_quantities.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+
+============================================================
+TABLE: client_work_requests
+  [INSERT] Allow anonymous guest work request inserts | permissive=PERMISSIVE | roles={anon}
+    WITH CHECK: ((guest_email IS NOT NULL) AND (guest_name IS NOT NULL) AND (organization_id IS NOT NULL))
+  [SELECT] Anon can read own guest requests by email | permissive=PERMISSIVE | roles={anon}
+    USING:      ((guest_email IS NOT NULL) AND (client_id IS NULL))
+  [UPDATE] Authenticated users can update work requests | permissive=PERMISSIVE | roles={authenticated}
+    USING:      ((organization_id IN ( SELECT om.organization_id  FROM organization_members om WHERE (om.user_id = ( SELECT auth.uid() AS uid)))) OR (EXISTS ( SELECT 1  FROM client_portal_accounts WHERE ((client_portal_accounts.id = client_work_requests.portal_account_id) AND (client_portal_accounts.user_id = ( SELECT auth.uid() AS uid))))))
+    WITH CHECK: (organization_id IN ( SELECT om.organization_id  FROM organization_members om WHERE (om.user_id = ( SELECT auth.uid() AS uid))))
+  [INSERT] Portal clients can insert own work requests | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (portal_account_id IN ( SELECT cpa.id  FROM client_portal_accounts cpa WHERE ((cpa.user_id = ( SELECT auth.uid() AS uid)) AND (cpa.is_active = true))))
+  [SELECT] Portal clients can view own work requests | permissive=PERMISSIVE | roles={authenticated}
+    USING:      ((portal_account_id IN ( SELECT cpa.id  FROM client_portal_accounts cpa WHERE ((cpa.user_id = ( SELECT auth.uid() AS uid)) AND (cpa.is_active = true)))) OR (organization_id IN ( SELECT om.organization_id  FROM organization_members om WHERE (om.user_id = ( SELECT auth.uid() AS uid)))))
+
+============================================================
+TABLE: clients
+  [SELECT] Authenticated users can view clients | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (is_org_member(organization_id) OR (id = get_portal_client_id()))
+  [DELETE] admins_delete | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_admin(organization_id)
+  [INSERT] members_insert | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: is_org_member(organization_id)
+  [UPDATE] members_update | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+    WITH CHECK: is_org_member(organization_id)
+
+============================================================
+TABLE: clock_out_prompts
+  [DELETE] admins_delete | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_admin(organization_id)
+  [INSERT] members_insert | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: is_org_member(organization_id)
+  [SELECT] members_select | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+  [UPDATE] members_update | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+    WITH CHECK: is_org_member(organization_id)
+
+============================================================
+TABLE: crew_efficiency_rules
+  [DELETE] admin_delete | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['admin'::text, 'owner'::text])))))
+  [INSERT] admin_insert | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['admin'::text, 'owner'::text])))))
+  [SELECT] admin_select | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['admin'::text, 'owner'::text])))))
+  [UPDATE] admin_update | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['admin'::text, 'owner'::text])))))
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['admin'::text, 'owner'::text])))))
+
+============================================================
+TABLE: crew_live_locations
+  [SELECT] Managers and above can view org live locations | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members om WHERE ((om.organization_id = crew_live_locations.organization_id) AND (om.user_id = ( SELECT auth.uid() AS uid)) AND (om.role = ANY (ARRAY['owner'::text, 'admin'::text, 'manager'::text])))))
+  [DELETE] admins_delete | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_admin(organization_id)
+  [INSERT] members_insert | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: is_org_member(organization_id)
+  [UPDATE] members_update | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+    WITH CHECK: is_org_member(organization_id)
+
+============================================================
+TABLE: departure_reminders
+  [DELETE] Users can delete own departure reminders | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (user_id = ( SELECT auth.uid() AS uid))
+  [INSERT] Users can insert own departure reminders | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (user_id = ( SELECT auth.uid() AS uid))
+  [UPDATE] Users can update own departure reminders | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (user_id = ( SELECT auth.uid() AS uid))
+  [SELECT] Users can view own departure reminders | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (user_id = ( SELECT auth.uid() AS uid))
+
+============================================================
+TABLE: detected_locations
+  [DELETE] admins_delete | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_admin(organization_id)
+  [INSERT] members_insert | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: is_org_member(organization_id)
+  [SELECT] members_select | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+  [UPDATE] members_update | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+    WITH CHECK: is_org_member(organization_id)
+
+============================================================
+TABLE: document_templates
+  [DELETE] Admins and managers can delete document templates | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = document_templates.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text, 'manager'::text])))))
+  [INSERT] Admins and managers can insert document templates | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = document_templates.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text, 'manager'::text])))))
+  [UPDATE] Admins and managers can update document templates | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = document_templates.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text, 'manager'::text])))))
+  [SELECT] Org members can view document templates | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = document_templates.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+
+============================================================
+TABLE: email_unsubscribes
+  [DELETE] Org owners and admins can delete unsubscribes | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = email_unsubscribes.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text])))))
+  [SELECT] Org owners and admins can view unsubscribes | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = email_unsubscribes.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text])))))
+
+============================================================
+TABLE: equipment_checklist_items
+  [DELETE] Employees can delete own equipment checklist items | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (employee_id = ( SELECT auth.uid() AS uid))
+  [INSERT] Employees can insert own equipment checklist items | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (employee_id = ( SELECT auth.uid() AS uid))
+  [UPDATE] Employees can update own equipment checklist items | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (employee_id = ( SELECT auth.uid() AS uid))
+  [SELECT] Org members can view equipment checklist items | permissive=PERMISSIVE | roles={authenticated}
+    USING:      ((employee_id = ( SELECT auth.uid() AS uid)) OR (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = equipment_checklist_items.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text, 'manager'::text]))))))
+
+============================================================
+TABLE: equipment_inventory
+  [DELETE] Admins and owners can delete equipment inventory | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = equipment_inventory.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text])))))
+  [INSERT] Admins and owners can insert equipment inventory | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = equipment_inventory.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text])))))
+  [UPDATE] Admins and owners can update equipment inventory | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = equipment_inventory.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text])))))
+  [SELECT] Org members can view equipment inventory | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = equipment_inventory.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+
+============================================================
+TABLE: equipment_job_type_assignments
+  [DELETE] Org members can delete equipment job type assignments | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = equipment_job_type_assignments.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [INSERT] Org members can insert equipment job type assignments | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = equipment_job_type_assignments.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [SELECT] Org members can view equipment job type assignments | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = equipment_job_type_assignments.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+
+============================================================
+TABLE: equipment_tag_assignments
+  [DELETE] Org members can delete equipment tag assignments | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = equipment_tag_assignments.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [INSERT] Org members can insert equipment tag assignments | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = equipment_tag_assignments.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [UPDATE] Org members can update equipment tag assignments | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = equipment_tag_assignments.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [SELECT] Org members can view equipment tag assignments | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = equipment_tag_assignments.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+
+============================================================
+TABLE: equipment_tags
+  [DELETE] Org members can delete equipment tags | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = equipment_tags.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [INSERT] Org members can insert equipment tags | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = equipment_tags.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [UPDATE] Org members can update equipment tags | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = equipment_tags.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [SELECT] Org members can view equipment tags | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = equipment_tags.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+
+============================================================
+TABLE: estimate_approval_tokens
+  [INSERT] Users can create tokens for own estimates | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (estimate_id IN ( SELECT estimates.id  FROM estimates WHERE (estimates.organization_id IN ( SELECT organization_members.organization_id    FROM organization_members     WHERE (organization_members.user_id = ( SELECT auth.uid() AS uid))))))
+  [DELETE] Users can delete own estimate tokens | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (estimate_id IN ( SELECT estimates.id  FROM estimates WHERE (estimates.organization_id IN ( SELECT organization_members.organization_id    FROM organization_members     WHERE (organization_members.user_id = ( SELECT auth.uid() AS uid))))))
+  [SELECT] Users can view own estimate tokens | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (estimate_id IN ( SELECT estimates.id  FROM estimates WHERE (estimates.organization_id IN ( SELECT organization_members.organization_id    FROM organization_members     WHERE (organization_members.user_id = ( SELECT auth.uid() AS uid))))))
+
+============================================================
+TABLE: estimate_items
+  [DELETE] admins_delete | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_admin(organization_id)
+  [INSERT] members_insert | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: is_org_member(organization_id)
+  [SELECT] members_select | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+  [UPDATE] members_update | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+    WITH CHECK: is_org_member(organization_id)
+
+============================================================
+TABLE: estimate_sequence
+  [INSERT] own_insert | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (( SELECT auth.uid() AS uid) = user_id)
+  [SELECT] own_select | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (( SELECT auth.uid() AS uid) = user_id)
+  [UPDATE] own_update | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (( SELECT auth.uid() AS uid) = user_id)
+    WITH CHECK: (( SELECT auth.uid() AS uid) = user_id)
+
+============================================================
+TABLE: estimates
+  [SELECT] Authenticated users can view estimates | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (is_org_member(organization_id) OR ((client_id IS NOT NULL) AND (client_id = get_portal_client_id())))
+  [DELETE] admins_delete | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_admin(organization_id)
+  [INSERT] members_insert | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: is_org_member(organization_id)
+  [UPDATE] members_update | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+    WITH CHECK: is_org_member(organization_id)
+
+============================================================
+TABLE: expenses
+  [DELETE] admins_delete | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_admin(organization_id)
+  [INSERT] members_insert | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: is_org_member(organization_id)
+  [SELECT] members_select | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+  [UPDATE] members_update | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+    WITH CHECK: is_org_member(organization_id)
+
+============================================================
+TABLE: faq_analytics
+  [INSERT] own_insert | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: ((( SELECT auth.uid() AS uid) = user_id) OR (user_id IS NULL))
+  [SELECT] own_select | permissive=PERMISSIVE | roles={authenticated}
+    USING:      ((( SELECT auth.uid() AS uid) = user_id) OR (user_id IS NULL))
+
+============================================================
+TABLE: finance_categories
+  [SELECT] Org members can view finance categories | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+  [DELETE] Owners and managers can delete finance categories | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_manager_or_admin(organization_id)
+  [INSERT] Owners and managers can insert finance categories | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: is_org_manager_or_admin(organization_id)
+  [UPDATE] Owners and managers can update finance categories | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_manager_or_admin(organization_id)
+    WITH CHECK: is_org_manager_or_admin(organization_id)
+
+============================================================
+TABLE: geofence_job_sessions
+  [UPDATE] Org members can update geofence sessions | permissive=PERMISSIVE | roles={authenticated}
+    USING:      ((user_id = ( SELECT auth.uid() AS uid)) OR (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = geofence_job_sessions.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text, 'manager'::text]))))))
+  [SELECT] Org members can view geofence sessions | permissive=PERMISSIVE | roles={authenticated}
+    USING:      ((user_id = ( SELECT auth.uid() AS uid)) OR (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = geofence_job_sessions.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text, 'manager'::text]))))))
+  [INSERT] Users can insert own geofence sessions | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (user_id = ( SELECT auth.uid() AS uid))
+
+============================================================
+TABLE: getting_started_progress
+  [SELECT] Org members can view getting started progress | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = getting_started_progress.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [INSERT] Owners and managers can insert getting started progress | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = getting_started_progress.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text, 'manager'::text])))))
+  [UPDATE] Owners and managers can update getting started progress | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = getting_started_progress.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text, 'manager'::text])))))
+  [DELETE] Owners can delete getting started progress | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = getting_started_progress.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = 'owner'::text))))
+
+============================================================
+TABLE: income
+  [DELETE] admins_delete | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_admin(organization_id)
+  [INSERT] members_insert | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: is_org_member(organization_id)
+  [SELECT] members_select | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+  [UPDATE] members_update | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+    WITH CHECK: is_org_member(organization_id)
+
+============================================================
+TABLE: invoice_items
+  [DELETE] admins_delete | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_admin(organization_id)
+  [INSERT] members_insert | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: is_org_member(organization_id)
+  [SELECT] members_select | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+  [UPDATE] members_update | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+    WITH CHECK: is_org_member(organization_id)
+
+============================================================
+TABLE: invoice_sequence
+  [INSERT] own_insert | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (( SELECT auth.uid() AS uid) = user_id)
+  [SELECT] own_select | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (( SELECT auth.uid() AS uid) = user_id)
+  [UPDATE] own_update | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (( SELECT auth.uid() AS uid) = user_id)
+    WITH CHECK: (( SELECT auth.uid() AS uid) = user_id)
+
+============================================================
+TABLE: invoices
+  [SELECT] Authenticated users can view invoices | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (is_org_member(organization_id) OR ((client_id IS NOT NULL) AND (client_id = get_portal_client_id())))
+  [DELETE] admins_delete | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_admin(organization_id)
+  [INSERT] members_insert | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: is_org_member(organization_id)
+  [UPDATE] members_update | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+    WITH CHECK: is_org_member(organization_id)
+
+============================================================
+TABLE: job_checklist_items
+  [INSERT] Members can create checklist items | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = job_checklist_items.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [UPDATE] Members can update checklist items | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = job_checklist_items.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = job_checklist_items.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [SELECT] Members can view checklist items | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = job_checklist_items.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [DELETE] Non-basic users can delete checklist items | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (organization_id IN ( SELECT organization_members.organization_id  FROM organization_members WHERE ((organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text, 'manager'::text])))))
+
+============================================================
+TABLE: job_checklists
+  [SELECT] Members can view job checklists | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = job_checklists.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [INSERT] Non-basic users can create job checklists | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = job_checklists.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'manager'::text, 'member'::text])))))
+  [DELETE] Non-basic users can delete job checklists | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (organization_id IN ( SELECT organization_members.organization_id  FROM organization_members WHERE ((organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text, 'manager'::text])))))
+  [UPDATE] Non-basic users can update job checklists | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = job_checklists.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'manager'::text, 'member'::text])))))
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = job_checklists.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'manager'::text, 'member'::text])))))
+
+============================================================
+TABLE: job_completion_notifications
+  [SELECT] Admins and owners can view org notifications | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (organization_id IN ( SELECT organization_members.organization_id  FROM organization_members WHERE ((organization_members.user_id = auth.uid()) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text, 'manager'::text])))))
+  [INSERT] Members can insert own org notifications | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (organization_id IN ( SELECT organization_members.organization_id  FROM organization_members WHERE (organization_members.user_id = auth.uid())))
+  [SELECT] Members can view own notifications | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (employee_user_id = auth.uid())
+
+============================================================
+TABLE: job_service_packages
+  [DELETE] admins_delete | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_admin(organization_id)
+  [INSERT] members_insert | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: is_org_member(organization_id)
+  [SELECT] members_select | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+  [UPDATE] members_update | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+    WITH CHECK: is_org_member(organization_id)
+
+============================================================
+TABLE: job_supplies
+  [INSERT] Members can create job supplies | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = job_supplies.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [UPDATE] Members can update job supplies | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = job_supplies.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = job_supplies.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [SELECT] Members can view job supplies | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = job_supplies.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [DELETE] Owners and managers can delete job supplies | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = job_supplies.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text])))))
+
+============================================================
+TABLE: job_type_categories
+  [SELECT] Org members can select job_type_categories | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (organization_id IN ( SELECT om.organization_id  FROM organization_members om WHERE (om.user_id = ( SELECT auth.uid() AS uid))))
+  [DELETE] admins_delete_categories | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_admin(organization_id)
+  [INSERT] admins_insert_categories | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: is_org_admin(organization_id)
+  [UPDATE] admins_update_categories | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_admin(organization_id)
+    WITH CHECK: is_org_admin(organization_id)
+
+============================================================
+TABLE: job_type_defaults
+  [DELETE] Admins can delete job type defaults | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = job_type_defaults.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text])))))
+  [INSERT] Admins can insert job type defaults | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = job_type_defaults.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text])))))
+  [UPDATE] Admins can update job type defaults | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = job_type_defaults.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text])))))
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = job_type_defaults.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text])))))
+  [SELECT] Members can view job type defaults | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = job_type_defaults.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+
+============================================================
+TABLE: job_types
+  [DELETE] admins_delete | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_admin(organization_id)
+  [INSERT] admins_insert | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: is_org_admin(organization_id)
+  [UPDATE] admins_update | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_admin(organization_id)
+    WITH CHECK: is_org_admin(organization_id)
+  [SELECT] members_select | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+
+============================================================
+TABLE: jobs
+  [DELETE] admins_delete | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_admin(organization_id)
+  [INSERT] members_insert | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: is_org_member(organization_id)
+  [SELECT] members_select | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+  [UPDATE] members_update | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+    WITH CHECK: is_org_member(organization_id)
+
+============================================================
+TABLE: layout_preferences
+  [DELETE] own_delete | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (( SELECT auth.uid() AS uid) = user_id)
+  [INSERT] own_insert | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (( SELECT auth.uid() AS uid) = user_id)
+  [SELECT] own_select | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (( SELECT auth.uid() AS uid) = user_id)
+  [UPDATE] own_update | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (( SELECT auth.uid() AS uid) = user_id)
+    WITH CHECK: (( SELECT auth.uid() AS uid) = user_id)
+
+============================================================
+TABLE: lifecycle_email_log
+  [SELECT] Org admins and owners can view lifecycle emails | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = lifecycle_email_log.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text])))))
+
+============================================================
+TABLE: location_audit_logs
+  [INSERT] Users can insert own location audit logs | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (user_id = ( SELECT auth.uid() AS uid))
+  [UPDATE] Users can update own location audit logs | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (user_id = ( SELECT auth.uid() AS uid))
+    WITH CHECK: (user_id = ( SELECT auth.uid() AS uid))
+  [SELECT] Users can view location audit logs | permissive=PERMISSIVE | roles={authenticated}
+    USING:      ((user_id = ( SELECT auth.uid() AS uid)) OR (EXISTS ( SELECT 1  FROM organization_members om WHERE ((om.organization_id = location_audit_logs.organization_id) AND (om.user_id = ( SELECT auth.uid() AS uid)) AND (om.role = ANY (ARRAY['admin'::text, 'owner'::text]))))))
+
+============================================================
+TABLE: location_tracking
+  [DELETE] admins_delete | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_admin(organization_id)
+  [INSERT] members_insert | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: is_org_member(organization_id)
+  [SELECT] members_select | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+  [UPDATE] members_update | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+    WITH CHECK: is_org_member(organization_id)
+
+============================================================
+TABLE: message_templates
+  [DELETE] admins_delete | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_admin(organization_id)
+  [INSERT] members_insert | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: is_org_member(organization_id)
+  [SELECT] members_select | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+  [UPDATE] members_update | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+    WITH CHECK: is_org_member(organization_id)
+
+============================================================
+TABLE: mileage_readings
+  [DELETE] admins_delete | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_admin(organization_id)
+  [INSERT] members_insert | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: is_org_member(organization_id)
+  [SELECT] members_select | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+  [UPDATE] members_update | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+    WITH CHECK: is_org_member(organization_id)
+
+============================================================
+TABLE: mileage_trips
+  [DELETE] admins_delete | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_admin(organization_id)
+  [INSERT] members_insert | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: is_org_member(organization_id)
+  [SELECT] members_select | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+  [UPDATE] members_update | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+    WITH CHECK: is_org_member(organization_id)
+
+============================================================
+TABLE: notes
+  [INSERT] Members can create notes | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = notes.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [SELECT] Members can view notes | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = notes.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [DELETE] Users can delete own notes | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (user_id = ( SELECT auth.uid() AS uid))
+  [UPDATE] Users can update own notes | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (user_id = ( SELECT auth.uid() AS uid))
+    WITH CHECK: (user_id = ( SELECT auth.uid() AS uid))
+
+============================================================
+TABLE: oil_changes
+  [DELETE] Users can delete own oil changes | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (user_id = ( SELECT auth.uid() AS uid))
+  [INSERT] Users can insert own oil changes | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (user_id = ( SELECT auth.uid() AS uid))
+  [UPDATE] Users can update own oil changes | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (user_id = ( SELECT auth.uid() AS uid))
+  [SELECT] Users can view own oil changes | permissive=PERMISSIVE | roles={authenticated}
+    USING:      ((user_id = ( SELECT auth.uid() AS uid)) OR (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = oil_changes.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text, 'manager'::text]))))))
+
+============================================================
+TABLE: organization_communication_settings
+  [SELECT] Members can view org communication settings | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = organization_communication_settings.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [INSERT] Owners and admins can insert org communication settings | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = organization_communication_settings.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text])))))
+  [UPDATE] Owners and admins can update org communication settings | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = organization_communication_settings.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text])))))
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = organization_communication_settings.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text])))))
+
+============================================================
+TABLE: organization_defaults
+  [SELECT] Organization members can view defaults | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = organization_defaults.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [INSERT] Owners and admins can insert defaults | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = organization_defaults.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text])))))
+  [UPDATE] Owners and admins can update defaults | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = organization_defaults.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text])))))
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = organization_defaults.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text])))))
+  [DELETE] Owners can delete defaults | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = organization_defaults.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = 'owner'::text))))
+
+============================================================
+TABLE: organization_lifecycle_emails
+  [SELECT] Org owners can view their lifecycle emails | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = organization_lifecycle_emails.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = 'owner'::text))))
+
+============================================================
+TABLE: organization_members
+  [DELETE] admin_delete | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_admin(organization_id)
+  [INSERT] admin_insert | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (is_org_admin(organization_id) OR ((user_id = ( SELECT auth.uid() AS uid)) AND (role = 'owner'::text)))
+  [UPDATE] admin_update | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_admin(organization_id)
+    WITH CHECK: is_org_admin(organization_id)
+  [SELECT] members_select | permissive=PERMISSIVE | roles={authenticated}
+    USING:      ((user_id = ( SELECT auth.uid() AS uid)) OR is_org_member(organization_id))
+
+============================================================
+TABLE: organization_pane_pricing
+  [DELETE] Admins and managers can delete pane pricing | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = organization_pane_pricing.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text, 'manager'::text])))))
+  [INSERT] Admins and managers can insert pane pricing | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = organization_pane_pricing.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text, 'manager'::text])))))
+  [UPDATE] Admins and managers can update pane pricing | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = organization_pane_pricing.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text, 'manager'::text])))))
+  [SELECT] Org members can read pane pricing | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = organization_pane_pricing.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+
+============================================================
+TABLE: organization_subscriptions
+  [SELECT] Org members can view their subscription | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = organization_subscriptions.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [UPDATE] Org owners and admins can update subscription | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = organization_subscriptions.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text])))))
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = organization_subscriptions.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text])))))
+
+============================================================
+TABLE: organizations
+  [SELECT] members_select | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(id)
+  [DELETE] owners_delete | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (owner_id = ( SELECT auth.uid() AS uid))
+  [UPDATE] owners_update | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_admin(id)
+    WITH CHECK: is_org_admin(id)
+  [INSERT] users_insert | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (owner_id = ( SELECT auth.uid() AS uid))
+
+============================================================
+TABLE: pane_types
+  [DELETE] Admins can delete pane types | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (organization_id IN ( SELECT om.organization_id  FROM organization_members om WHERE ((om.user_id = ( SELECT auth.uid() AS uid)) AND (om.role = ANY (ARRAY['admin'::text, 'manager'::text])))))
+  [INSERT] Admins can insert pane types | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (organization_id IN ( SELECT om.organization_id  FROM organization_members om WHERE ((om.user_id = ( SELECT auth.uid() AS uid)) AND (om.role = ANY (ARRAY['admin'::text, 'manager'::text])))))
+  [UPDATE] Admins can update pane types | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (organization_id IN ( SELECT om.organization_id  FROM organization_members om WHERE ((om.user_id = ( SELECT auth.uid() AS uid)) AND (om.role = ANY (ARRAY['admin'::text, 'manager'::text])))))
+    WITH CHECK: (organization_id IN ( SELECT om.organization_id  FROM organization_members om WHERE ((om.user_id = ( SELECT auth.uid() AS uid)) AND (om.role = ANY (ARRAY['admin'::text, 'manager'::text])))))
+  [SELECT] Members can view org pane types | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (organization_id IN ( SELECT om.organization_id  FROM organization_members om WHERE (om.user_id = ( SELECT auth.uid() AS uid))))
+
+============================================================
+TABLE: portal_messages
+  [INSERT] Authenticated users can send portal messages | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (((sender_type = 'org'::text) AND (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = portal_messages.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))) OR ((sender_type = 'client'::text) AND (EXISTS ( SELECT 1  FROM client_portal_accounts WHERE ((client_portal_accounts.id = portal_messages.portal_account_id) AND (client_portal_accounts.user_id = ( SELECT auth.uid() AS uid)))))))
+  [UPDATE] Authenticated users can update portal messages | permissive=PERMISSIVE | roles={authenticated}
+    USING:      ((EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = portal_messages.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid))))) OR (EXISTS ( SELECT 1  FROM client_portal_accounts WHERE ((client_portal_accounts.id = portal_messages.portal_account_id) AND (client_portal_accounts.user_id = ( SELECT auth.uid() AS uid))))))
+  [SELECT] Authenticated users can view portal messages | permissive=PERMISSIVE | roles={authenticated}
+    USING:      ((EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = portal_messages.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid))))) OR (EXISTS ( SELECT 1  FROM client_portal_accounts WHERE ((client_portal_accounts.id = portal_messages.portal_account_id) AND (client_portal_accounts.user_id = ( SELECT auth.uid() AS uid))))))
+
+============================================================
+TABLE: previous_addresses
+  [DELETE] Org admins can delete previous addresses | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = previous_addresses.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text])))))
+  [INSERT] Org members can insert previous addresses | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = previous_addresses.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [UPDATE] Org members can update previous addresses | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = previous_addresses.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = previous_addresses.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [SELECT] Org members can view previous addresses | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = previous_addresses.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+
+============================================================
+TABLE: productivity_session_breaks
+  [DELETE] session_delete | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM (productivity_sessions ps  JOIN organization_members om ON ((om.organization_id = ps.organization_id))) WHERE ((ps.id = productivity_session_breaks.productivity_session_id) AND (om.user_id = ( SELECT auth.uid() AS uid)))))
+  [INSERT] session_insert | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (EXISTS ( SELECT 1  FROM (productivity_sessions ps  JOIN organization_members om ON ((om.organization_id = ps.organization_id))) WHERE ((ps.id = productivity_session_breaks.productivity_session_id) AND (om.user_id = ( SELECT auth.uid() AS uid)))))
+  [SELECT] session_select | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM (productivity_sessions ps  JOIN organization_members om ON ((om.organization_id = ps.organization_id))) WHERE ((ps.id = productivity_session_breaks.productivity_session_id) AND (om.user_id = ( SELECT auth.uid() AS uid)))))
+  [UPDATE] session_update | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM (productivity_sessions ps  JOIN organization_members om ON ((om.organization_id = ps.organization_id))) WHERE ((ps.id = productivity_session_breaks.productivity_session_id) AND (om.user_id = ( SELECT auth.uid() AS uid)))))
+    WITH CHECK: (EXISTS ( SELECT 1  FROM (productivity_sessions ps  JOIN organization_members om ON ((om.organization_id = ps.organization_id))) WHERE ((ps.id = productivity_session_breaks.productivity_session_id) AND (om.user_id = ( SELECT auth.uid() AS uid)))))
+
+============================================================
+TABLE: productivity_sessions
+  [DELETE] admins_delete | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_admin(organization_id)
+  [INSERT] members_insert | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: is_org_member(organization_id)
+  [SELECT] members_select | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+  [UPDATE] members_update | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+    WITH CHECK: is_org_member(organization_id)
+
+============================================================
+TABLE: profiles
+  [DELETE] users_delete | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (id = ( SELECT auth.uid() AS uid))
+  [INSERT] users_insert | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (id = ( SELECT auth.uid() AS uid))
+  [SELECT] users_select | permissive=PERMISSIVE | roles={authenticated}
+    USING:      ((id = ( SELECT auth.uid() AS uid)) OR (EXISTS ( SELECT 1  FROM (organization_members om1  JOIN organization_members om2 ON ((om1.organization_id = om2.organization_id))) WHERE ((om1.user_id = ( SELECT auth.uid() AS uid)) AND (om2.user_id = profiles.id)))))
+  [UPDATE] users_update | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (id = ( SELECT auth.uid() AS uid))
+    WITH CHECK: (id = ( SELECT auth.uid() AS uid))
+
+============================================================
+TABLE: push_notifications
+  [DELETE] admins_delete | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_admin(organization_id)
+  [INSERT] members_insert | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: is_org_member(organization_id)
+  [SELECT] members_select | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+  [UPDATE] members_update | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+    WITH CHECK: is_org_member(organization_id)
+
+============================================================
+TABLE: push_tokens
+  [DELETE] admins_delete | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_admin(organization_id)
+  [INSERT] members_insert | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: is_org_member(organization_id)
+  [SELECT] members_select | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+  [UPDATE] members_update | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+    WITH CHECK: is_org_member(organization_id)
+
+============================================================
+TABLE: quick_send_templates
+  [DELETE] Org members can delete quick send templates | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = quick_send_templates.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [INSERT] Org members can insert quick send templates | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = quick_send_templates.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [SELECT] Org members can select quick send templates | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = quick_send_templates.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [UPDATE] Org members can update quick send templates | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = quick_send_templates.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+
+============================================================
+TABLE: recent_quick_actions
+  [DELETE] Users can delete own recent actions | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (user_id = ( SELECT auth.uid() AS uid))
+  [INSERT] Users can insert own recent actions | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (user_id = ( SELECT auth.uid() AS uid))
+  [SELECT] Users can read own recent actions | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (user_id = ( SELECT auth.uid() AS uid))
+  [UPDATE] Users can update own recent actions | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (user_id = ( SELECT auth.uid() AS uid))
+    WITH CHECK: (user_id = ( SELECT auth.uid() AS uid))
+
+============================================================
+TABLE: route_optimization_runs
+  [INSERT] Organization members can create optimization runs | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = route_optimization_runs.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [SELECT] Organization members can view optimization runs | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = route_optimization_runs.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+
+============================================================
+TABLE: route_stops
+  [INSERT] Organization members can create route stops | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (EXISTS ( SELECT 1  FROM (route_templates  JOIN organization_members ON ((organization_members.organization_id = route_templates.organization_id))) WHERE ((route_templates.id = route_stops.route_template_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [DELETE] Organization members can delete route stops | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM (route_templates  JOIN organization_members ON ((organization_members.organization_id = route_templates.organization_id))) WHERE ((route_templates.id = route_stops.route_template_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [UPDATE] Organization members can update route stops | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM (route_templates  JOIN organization_members ON ((organization_members.organization_id = route_templates.organization_id))) WHERE ((route_templates.id = route_stops.route_template_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+    WITH CHECK: (EXISTS ( SELECT 1  FROM (route_templates  JOIN organization_members ON ((organization_members.organization_id = route_templates.organization_id))) WHERE ((route_templates.id = route_stops.route_template_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [SELECT] Organization members can view route stops | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM (route_templates  JOIN organization_members ON ((organization_members.organization_id = route_templates.organization_id))) WHERE ((route_templates.id = route_stops.route_template_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+
+============================================================
+TABLE: route_templates
+  [INSERT] Organization members can create route templates | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = route_templates.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [UPDATE] Organization members can update route templates | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = route_templates.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = route_templates.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [SELECT] Organization members can view route templates | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = route_templates.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [DELETE] Route creators and admins can delete route templates | permissive=PERMISSIVE | roles={authenticated}
+    USING:      ((created_by = ( SELECT auth.uid() AS uid)) OR (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = route_templates.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = 'admin'::text)))))
+
+============================================================
+TABLE: schedule_event_line_items
+  [DELETE] Organization members can delete line items | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = schedule_event_line_items.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [INSERT] Organization members can insert line items | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = schedule_event_line_items.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [UPDATE] Organization members can update line items | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = schedule_event_line_items.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [SELECT] Organization members can view line items | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = schedule_event_line_items.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+
+============================================================
+TABLE: schedule_event_team_members
+  [DELETE] Admins owners managers can delete team assignments | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = schedule_event_team_members.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text, 'manager'::text])))))
+  [INSERT] Admins owners managers can insert team assignments | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = schedule_event_team_members.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text, 'manager'::text])))))
+  [SELECT] Organization members can view team assignments | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = schedule_event_team_members.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+
+============================================================
+TABLE: schedule_events
+  [SELECT] Users can view relevant schedule events | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (is_org_admin(organization_id) OR (is_org_member(organization_id) AND (user_id = ( SELECT auth.uid() AS uid))) OR (is_org_member(organization_id) AND (assigned_to IS NOT NULL) AND (assigned_to = ( SELECT organization_members.user_id  FROM organization_members WHERE ((organization_members.organization_id = schedule_events.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))  LIMIT 1))) OR (is_org_member(organization_id) AND (EXISTS ( SELECT 1  FROM (schedule_event_team_members setm  JOIN organization_members om ON (((om.organization_id = setm.organization_id) AND (om.user_id = ( SELECT auth.uid() AS uid))))) WHERE ((setm.schedule_event_id = schedule_events.id) AND (setm.member_id = om.id))))) OR ((client_id IS NOT NULL) AND (client_id = get_portal_client_id())))
+  [DELETE] admins_delete | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_admin(organization_id)
+  [INSERT] members_insert | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: is_org_member(organization_id)
+  [UPDATE] members_update | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+    WITH CHECK: is_org_member(organization_id)
+
+============================================================
+TABLE: sent_messages
+  [DELETE] admins_delete | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_admin(organization_id)
+  [INSERT] members_insert | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: is_org_member(organization_id)
+  [SELECT] members_select | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+  [UPDATE] members_update | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+    WITH CHECK: is_org_member(organization_id)
+
+============================================================
+TABLE: shopping_list_items
+  [DELETE] Org members can delete shopping list items | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = shopping_list_items.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [INSERT] Org members can insert shopping list items | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = shopping_list_items.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [UPDATE] Org members can update shopping list items | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = shopping_list_items.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [SELECT] Org members can view shopping list items | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = shopping_list_items.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+
+============================================================
+TABLE: shopping_lists
+  [DELETE] Managers and above can delete shopping lists | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = shopping_lists.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text, 'manager'::text])))))
+  [INSERT] Org members can insert shopping lists | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = shopping_lists.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [UPDATE] Org members can update shopping lists | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = shopping_lists.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [SELECT] Org members can view shopping lists | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = shopping_lists.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+
+============================================================
+TABLE: short_links
+  [SELECT] Anyone can view short links by code | permissive=PERMISSIVE | roles={public}
+    USING:      true
+  [DELETE] Org members can delete short links | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = short_links.organization_id) AND (organization_members.user_id = auth.uid()))))
+  [INSERT] Org members can insert short links | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = short_links.organization_id) AND (organization_members.user_id = auth.uid()))))
+  [UPDATE] Org members can update short links | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = short_links.organization_id) AND (organization_members.user_id = auth.uid()))))
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = short_links.organization_id) AND (organization_members.user_id = auth.uid()))))
+
+============================================================
+TABLE: smart_suggestions_cache
+  [DELETE] Users can delete own suggestions | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (user_id = ( SELECT auth.uid() AS uid))
+  [INSERT] Users can insert own suggestions | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (user_id = ( SELECT auth.uid() AS uid))
+  [SELECT] Users can read own org suggestions | permissive=PERMISSIVE | roles={authenticated}
+    USING:      ((user_id = ( SELECT auth.uid() AS uid)) OR is_org_member(organization_id))
+  [UPDATE] Users can update own suggestions | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (user_id = ( SELECT auth.uid() AS uid))
+    WITH CHECK: (user_id = ( SELECT auth.uid() AS uid))
+
+============================================================
+TABLE: sms_messages
+  [INSERT] Users can insert SMS messages for their org | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (organization_id IN ( SELECT organization_members.organization_id  FROM organization_members WHERE (organization_members.user_id = ( SELECT auth.uid() AS uid))))
+  [UPDATE] Users can update SMS messages for their org | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (organization_id IN ( SELECT organization_members.organization_id  FROM organization_members WHERE (organization_members.user_id = ( SELECT auth.uid() AS uid))))
+  [SELECT] Users can view their org SMS messages | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (organization_id IN ( SELECT organization_members.organization_id  FROM organization_members WHERE (organization_members.user_id = ( SELECT auth.uid() AS uid))))
+
+============================================================
+TABLE: sms_opt_status
+  [INSERT] Users can insert opt status for their org | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (organization_id IN ( SELECT organization_members.organization_id  FROM organization_members WHERE (organization_members.user_id = ( SELECT auth.uid() AS uid))))
+  [UPDATE] Users can update opt status for their org | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (organization_id IN ( SELECT organization_members.organization_id  FROM organization_members WHERE (organization_members.user_id = ( SELECT auth.uid() AS uid))))
+  [SELECT] Users can view their org opt status | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (organization_id IN ( SELECT organization_members.organization_id  FROM organization_members WHERE (organization_members.user_id = ( SELECT auth.uid() AS uid))))
+
+============================================================
+TABLE: stripe_customers
+  [SELECT] Users can view their own customer data | permissive=PERMISSIVE | roles={authenticated}
+    USING:      ((user_id = ( SELECT auth.uid() AS uid)) AND (deleted_at IS NULL))
+
+============================================================
+TABLE: stripe_orders
+  [SELECT] Users can view their own order data | permissive=PERMISSIVE | roles={authenticated}
+    USING:      ((customer_id IN ( SELECT sc.customer_id  FROM stripe_customers sc WHERE ((sc.user_id = ( SELECT auth.uid() AS uid)) AND (sc.deleted_at IS NULL)))) AND (deleted_at IS NULL))
+
+============================================================
+TABLE: stripe_subscriptions
+  [SELECT] Users can view their own subscription data | permissive=PERMISSIVE | roles={authenticated}
+    USING:      ((customer_id IN ( SELECT sc.customer_id  FROM stripe_customers sc WHERE ((sc.user_id = ( SELECT auth.uid() AS uid)) AND (sc.deleted_at IS NULL)))) AND (deleted_at IS NULL))
+
+============================================================
+TABLE: subscription_plans
+  [SELECT] Authenticated users can view subscription plans | permissive=PERMISSIVE | roles={authenticated}
+    USING:      true
+
+============================================================
+TABLE: supplies_library
+  [INSERT] Members can create supplies | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = supplies_library.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [UPDATE] Members can update supplies | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = supplies_library.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = supplies_library.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [SELECT] Members can view supplies library | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = supplies_library.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [DELETE] Owners and managers can delete supplies | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = supplies_library.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text])))))
+
+============================================================
+TABLE: supply_catalog
+  [DELETE] Managers and above can delete supply catalog | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = supply_catalog.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text, 'manager'::text])))))
+  [INSERT] Org members can insert supply catalog | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = supply_catalog.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [UPDATE] Org members can update supply catalog | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = supply_catalog.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [SELECT] Org members can view supply catalog | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = supply_catalog.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+
+============================================================
+TABLE: supply_template_items
+  [INSERT] Members can create supply template items | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (organization_id IN ( SELECT organization_members.organization_id  FROM organization_members WHERE (organization_members.user_id = ( SELECT auth.uid() AS uid))))
+  [UPDATE] Members can update supply template items | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (organization_id IN ( SELECT organization_members.organization_id  FROM organization_members WHERE (organization_members.user_id = ( SELECT auth.uid() AS uid))))
+  [SELECT] Members can view supply template items | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (organization_id IN ( SELECT organization_members.organization_id  FROM organization_members WHERE (organization_members.user_id = ( SELECT auth.uid() AS uid))))
+  [DELETE] Non-basic users can delete supply template items | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (organization_id IN ( SELECT organization_members.organization_id  FROM organization_members WHERE ((organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text, 'manager'::text])))))
+
+============================================================
+TABLE: supply_templates
+  [INSERT] Members can create supply templates | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (organization_id IN ( SELECT organization_members.organization_id  FROM organization_members WHERE (organization_members.user_id = ( SELECT auth.uid() AS uid))))
+  [UPDATE] Members can update supply templates | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (organization_id IN ( SELECT organization_members.organization_id  FROM organization_members WHERE (organization_members.user_id = ( SELECT auth.uid() AS uid))))
+  [SELECT] Members can view supply templates | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (organization_id IN ( SELECT organization_members.organization_id  FROM organization_members WHERE (organization_members.user_id = ( SELECT auth.uid() AS uid))))
+  [DELETE] Non-basic users can delete supply templates | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (organization_id IN ( SELECT organization_members.organization_id  FROM organization_members WHERE ((organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text, 'manager'::text])))))
+
+============================================================
+TABLE: team_member_production_rates
+  [INSERT] Org admins and managers can insert production rates | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = team_member_production_rates.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text, 'manager'::text])))))
+  [UPDATE] Org admins and managers can update production rates | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = team_member_production_rates.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text, 'manager'::text])))))
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = team_member_production_rates.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text, 'manager'::text])))))
+  [DELETE] Org admins can delete production rates | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = team_member_production_rates.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text])))))
+  [SELECT] Org members can view production rates | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = team_member_production_rates.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+
+============================================================
+TABLE: team_notes
+  [DELETE] admins_delete | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_admin(organization_id)
+  [INSERT] members_insert | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: is_org_member(organization_id)
+  [SELECT] members_select | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+  [UPDATE] members_update | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+    WITH CHECK: is_org_member(organization_id)
+
+============================================================
+TABLE: tenant_email_settings
+  [DELETE] Org owners can delete email settings | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (organization_id IN ( SELECT organizations.id  FROM organizations WHERE (organizations.owner_id = ( SELECT auth.uid() AS uid))))
+  [INSERT] Org owners can insert email settings | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (organization_id IN ( SELECT organizations.id  FROM organizations WHERE (organizations.owner_id = ( SELECT auth.uid() AS uid))))
+  [UPDATE] Org owners can update email settings | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (organization_id IN ( SELECT organizations.id  FROM organizations WHERE (organizations.owner_id = ( SELECT auth.uid() AS uid))))
+    WITH CHECK: (organization_id IN ( SELECT organizations.id  FROM organizations WHERE (organizations.owner_id = ( SELECT auth.uid() AS uid))))
+  [SELECT] Org owners can view email settings | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (organization_id IN ( SELECT organizations.id  FROM organizations WHERE (organizations.owner_id = ( SELECT auth.uid() AS uid))))
+
+============================================================
+TABLE: tenant_sms_settings
+  [INSERT] Owners and admins can insert SMS settings | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (organization_id IN ( SELECT organization_members.organization_id  FROM organization_members WHERE ((organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text])))))
+  [UPDATE] Owners and admins can update SMS settings | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (organization_id IN ( SELECT organization_members.organization_id  FROM organization_members WHERE ((organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text])))))
+  [DELETE] Owners can delete SMS settings | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (organization_id IN ( SELECT organization_members.organization_id  FROM organization_members WHERE ((organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = 'owner'::text))))
+  [SELECT] Users can view their org SMS settings | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (organization_id IN ( SELECT organization_members.organization_id  FROM organization_members WHERE (organization_members.user_id = ( SELECT auth.uid() AS uid))))
+
+============================================================
+TABLE: time_entries
+  [DELETE] admins_delete | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_manager_or_admin(organization_id)
+  [UPDATE] admins_update | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_manager_or_admin(organization_id)
+    WITH CHECK: is_org_manager_or_admin(organization_id)
+  [SELECT] managers_admin_select_all | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_manager_or_admin(organization_id)
+  [INSERT] members_insert | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: is_org_member(organization_id)
+  [SELECT] members_select_own | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (user_id = ( SELECT auth.uid() AS uid))
+
+============================================================
+TABLE: time_entry_breaks
+  [DELETE] Users can delete own breaks | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (user_id = ( SELECT auth.uid() AS uid))
+  [INSERT] Users can insert own breaks | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (user_id = ( SELECT auth.uid() AS uid))
+  [SELECT] Users can read own org breaks | permissive=PERMISSIVE | roles={authenticated}
+    USING:      ((user_id = ( SELECT auth.uid() AS uid)) OR (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = time_entry_breaks.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['admin'::text, 'manager'::text]))))))
+  [UPDATE] Users can update own breaks | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (user_id = ( SELECT auth.uid() AS uid))
+    WITH CHECK: (user_id = ( SELECT auth.uid() AS uid))
+
+============================================================
+TABLE: time_entry_week_locks
+  [INSERT] Managers can create week locks | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = time_entry_week_locks.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text, 'manager'::text])))))
+  [DELETE] Managers can delete week locks | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = time_entry_week_locks.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['owner'::text, 'admin'::text, 'manager'::text])))))
+  [SELECT] Members can view week locks for their org | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = time_entry_week_locks.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+
+============================================================
+TABLE: todos
+  [DELETE] Users can delete own todos v2 | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (user_id = ( SELECT auth.uid() AS uid))
+  [INSERT] Users can insert own todos | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (user_id = ( SELECT auth.uid() AS uid))
+  [UPDATE] Users can update own todos v2 | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (user_id = ( SELECT auth.uid() AS uid))
+    WITH CHECK: (user_id = ( SELECT auth.uid() AS uid))
+  [SELECT] Users can view own or shared todos | permissive=PERMISSIVE | roles={authenticated}
+    USING:      ((user_id = ( SELECT auth.uid() AS uid)) OR ((is_shared_with_org = true) AND (organization_id IN ( SELECT organization_members.organization_id  FROM organization_members WHERE (organization_members.user_id = ( SELECT auth.uid() AS uid))))))
+
+============================================================
+TABLE: user_roles
+  [DELETE] admin_delete | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['admin'::text, 'owner'::text])))))
+  [INSERT] admin_insert | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['admin'::text, 'owner'::text])))))
+  [SELECT] admin_select | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['admin'::text, 'owner'::text])))))
+  [UPDATE] admin_update | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['admin'::text, 'owner'::text])))))
+    WITH CHECK: (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.user_id = ( SELECT auth.uid() AS uid)) AND (organization_members.role = ANY (ARRAY['admin'::text, 'owner'::text])))))
+
+============================================================
+TABLE: vehicle_maintenance_intervals
+  [DELETE] Org members can delete maintenance intervals | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+  [INSERT] Org members can insert maintenance intervals | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: is_org_member(organization_id)
+  [UPDATE] Org members can update maintenance intervals | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+    WITH CHECK: is_org_member(organization_id)
+  [SELECT] Org members can view maintenance intervals | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+
+============================================================
+TABLE: vehicle_maintenance_notifications
+  [INSERT] Org members can insert maintenance notifications | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: is_org_member(organization_id)
+  [SELECT] Org members can view maintenance notifications | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+
+============================================================
+TABLE: vehicle_service_logs
+  [DELETE] Org members can delete own service logs | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+  [INSERT] Org members can insert service logs | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: is_org_member(organization_id)
+  [UPDATE] Org members can update own service logs | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+    WITH CHECK: is_org_member(organization_id)
+  [SELECT] Org members can view service logs | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+
+============================================================
+TABLE: vehicles
+  [DELETE] admins_delete | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_admin(organization_id)
+  [INSERT] members_insert | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: is_org_member(organization_id)
+  [SELECT] members_select | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+  [UPDATE] members_update | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+    WITH CHECK: is_org_member(organization_id)
+
+============================================================
+TABLE: walkthrough_analytics
+  [INSERT] own_insert | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: ((( SELECT auth.uid() AS uid) = user_id) OR (user_id IS NULL))
+  [SELECT] own_select | permissive=PERMISSIVE | roles={authenticated}
+    USING:      ((( SELECT auth.uid() AS uid) = user_id) OR (user_id IS NULL))
+
+============================================================
+TABLE: work_orders
+  [DELETE] members_delete | permissive=PERMISSIVE | roles={authenticated}
+    USING:      (EXISTS ( SELECT 1  FROM organization_members WHERE ((organization_members.organization_id = work_orders.organization_id) AND (organization_members.user_id = ( SELECT auth.uid() AS uid)))))
+  [INSERT] members_insert | permissive=PERMISSIVE | roles={authenticated}
+    WITH CHECK: is_org_member(organization_id)
+  [SELECT] members_select | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+  [UPDATE] members_update | permissive=PERMISSIVE | roles={authenticated}
+    USING:      is_org_member(organization_id)
+    WITH CHECK: is_org_member(organization_id)
