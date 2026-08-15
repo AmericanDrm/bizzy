@@ -18,10 +18,6 @@
       "bundleIdentifier": "com.adwcpatrick.bizzy"
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
       "package": "com.adwcpatrick.bizzy"
     },
     "web": {
