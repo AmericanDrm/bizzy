@@ -1,0 +1,1 @@
+CRITICAL: Never overwrite or regenerate the .env file. It contains live credentials including the Mapbox token (EXPO_PUBLIC_MAPBOX_TOKEN). Always preserve all existing values in .env when making changes to the project.

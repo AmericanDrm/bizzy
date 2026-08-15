@@ -1,0 +1,227 @@
+import { Platform, StyleSheet } from 'react-native';
+import { SPACING, TYPOGRAPHY, CARD, SEARCH_BAR, FAB, HEADER, ICON_BUTTON, CARD_SHADOW } from '@/constants/designSystem';
+
+const getDynamicStyles = (colors: any) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    header: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingHorizontal: HEADER.paddingHorizontal,
+      paddingVertical: HEADER.paddingVertical,
+      backgroundColor: colors.surface,
+    },
+    headerLeft: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: SPACING.md,
+    },
+    headerTitle: {
+      fontSize: TYPOGRAPHY.screenTitle.fontSize,
+      fontWeight: TYPOGRAPHY.screenTitle.fontWeight,
+      color: colors.primary,
+      lineHeight: TYPOGRAPHY.screenTitle.lineHeight,
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      textAlign: 'center',
+    },
+    headerSubtitle: {
+      fontSize: TYPOGRAPHY.body.fontSize,
+      fontWeight: TYPOGRAPHY.body.fontWeight,
+      color: colors.textSecondary,
+      marginTop: 2,
+    },
+    headerButtons: {
+      flexDirection: 'row',
+      gap: SPACING.sm,
+    },
+    headerButton: {
+      padding: SPACING.sm,
+    },
+    iconButton: {
+      width: ICON_BUTTON.size,
+      height: ICON_BUTTON.size,
+      borderRadius: ICON_BUTTON.borderRadius,
+      backgroundColor: colors.inputBackground,
+      borderWidth: ICON_BUTTON.borderWidth,
+      borderColor: CARD.borderColor,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    searchContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: colors.inputBackground,
+      marginHorizontal: HEADER.paddingHorizontal,
+      marginTop: SPACING.sm,
+      marginBottom: SPACING.sm,
+      paddingHorizontal: SEARCH_BAR.paddingHorizontal,
+      paddingVertical: SEARCH_BAR.paddingVertical,
+      borderRadius: SEARCH_BAR.borderRadius,
+      gap: SPACING.md,
+    },
+    searchInput: {
+      flex: 1,
+      fontSize: TYPOGRAPHY.body.fontSize,
+      color: colors.text,
+      padding: 0,
+      margin: 0,
+      borderWidth: 0,
+      backgroundColor: 'transparent',
+      ...(Platform.OS === 'web' ? { outlineStyle: 'none' } : {}),
+    } as any,
+    list: {
+      padding: HEADER.paddingHorizontal,
+    },
+    clientCard: {
+      backgroundColor: colors.cardBackground,
+      borderRadius: CARD.borderRadius,
+      padding: CARD.padding,
+      marginBottom: SPACING.md,
+      ...CARD_SHADOW,
+      borderWidth: CARD.borderWidth,
+      borderColor: CARD.borderColor,
+    },
+    clientHeader: {
+      marginBottom: SPACING.sm,
+    },
+    clientName: {
+      fontSize: TYPOGRAPHY.heading.fontSize,
+      fontWeight: TYPOGRAPHY.heading.fontWeight,
+      color: colors.text,
+      lineHeight: TYPOGRAPHY.heading.lineHeight,
+    },
+    clientInfo: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: SPACING.sm,
+      marginTop: SPACING.sm,
+      overflow: 'hidden',
+    },
+    clientInfoText: {
+      fontSize: TYPOGRAPHY.body.fontSize,
+      color: colors.textSecondary,
+      lineHeight: TYPOGRAPHY.body.lineHeight,
+    },
+    fab: {
+      position: 'absolute',
+      right: HEADER.paddingHorizontal,
+      bottom: SPACING.xl,
+      width: FAB.size,
+      height: FAB.size,
+      borderRadius: FAB.borderRadius,
+      backgroundColor: colors.primary,
+      justifyContent: 'center',
+      alignItems: 'center',
+      ...(FAB as any),
+    },
+    emptyContainer: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingTop: SPACING.xxl * 3,
+    },
+    emptyText: {
+      fontSize: TYPOGRAPHY.heading.fontSize,
+      fontWeight: TYPOGRAPHY.heading.fontWeight,
+      color: colors.textSecondary,
+      marginBottom: SPACING.sm,
+    },
+    emptySubtext: {
+      fontSize: TYPOGRAPHY.body.fontSize,
+      color: colors.textSecondary,
+      textAlign: 'center',
+    },
+
+    // Client Add Choice Sheet
+    addClientSheet: {
+      borderTopLeftRadius: 20,
+      borderTopRightRadius: 20,
+      paddingHorizontal: 20,
+      paddingTop: 12,
+      paddingBottom: Platform.OS === 'ios' ? 36 : 24,
+      ...(Platform.select({
+        web: { boxShadow: '0 -4px 24px rgba(0,0,0,0.15)' },
+        default: {
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: -4 },
+          shadowOpacity: 0.15,
+          shadowRadius: 12,
+          elevation: 16,
+        },
+      }) as any),
+    },
+    addClientSheetHandle: {
+      width: 36,
+      height: 4,
+      borderRadius: 2,
+      alignSelf: 'center',
+      marginBottom: 20,
+    },
+    addClientSheetTitle: {
+      fontSize: 20,
+      fontWeight: '700',
+      marginBottom: 4,
+    },
+    addClientSheetSubtitle: {
+      fontSize: 14,
+      marginBottom: 20,
+      lineHeight: 20,
+    },
+    addClientSheetOption: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 14,
+      borderRadius: 14,
+      padding: 16,
+      marginBottom: 10,
+    },
+    addClientSheetOptionSecondary: {
+      borderWidth: 1,
+    },
+    addClientSheetOptionIcon: {
+      width: 46,
+      height: 46,
+      borderRadius: 23,
+      backgroundColor: 'rgba(255,255,255,0.15)',
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexShrink: 0,
+    },
+    addClientSheetOptionTitle: {
+      fontSize: 16,
+      fontWeight: '700',
+      color: '#fff',
+      marginBottom: 3,
+    },
+    addClientSheetOptionDesc: {
+      fontSize: 13,
+      color: 'rgba(255,255,255,0.72)',
+      lineHeight: 18,
+    },
+    addClientSheetArrow: {
+      width: 30,
+      height: 30,
+      borderRadius: 15,
+      backgroundColor: 'rgba(255,255,255,0.12)',
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexShrink: 0,
+    },
+    addClientSheetCancel: {
+      borderRadius: 12,
+      paddingVertical: 14,
+      alignItems: 'center',
+      marginTop: 4,
+    },
+    addClientSheetCancelText: {
+      fontSize: 15,
+      fontWeight: '600',
+    },
+  });
+
+export default getDynamicStyles;
