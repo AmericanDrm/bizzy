@@ -10,23 +10,36 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.adwcpatrick.bizzy"
     },
     "android": {
-      "package": "com.adwcpatrick.bizzy"
+      "package": "com.adwcpatrick.bizzy",
+      "permissions": [
+        "android.permission.USE_BIOMETRIC",
+        "android.permission.USE_FINGERPRINT"
+      ]
     },
     "web": {
-      "bundler": "metro",
+      "bundler": "metro"
     },
     "plugins": [
       "@rnmapbox/maps",
       "expo-router",
       "expo-local-authentication",
       "expo-secure-store",
-      "expo-notifications"
-    ]
+      "expo-notifications",
+      "expo-splash-screen"
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "fed59254-dcf2-43bd-bbb8-86102b36e2db"
+      }
+    }
   }
 }
