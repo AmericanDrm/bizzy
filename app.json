@@ -7,7 +7,10 @@
     "icon": "./assets/images/icon.png",
     "scheme": "bizzy",
     "userInterfaceStyle": "automatic",
+<<<<<<< HEAD
     "newArchEnabled": false,
+=======
+>>>>>>> 54e5381760bf70eb3bbb4ab62f8e598967dd37f8
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
@@ -31,6 +34,7 @@
     },
     "plugins": [
       "expo-router",
+<<<<<<< HEAD
       "expo-splash-screen",
       [
         "@rnmapbox/maps",
@@ -42,6 +46,21 @@
     ],
     "experiments": {
       "typedRoutes": true
+=======
+      "expo-secure-store",
+      "expo-font",
+      "expo-sharing",
+      "expo-web-browser"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "fed59254-dcf2-43bd-bbb8-86102b36e2db"
+      }
+>>>>>>> 54e5381760bf70eb3bbb4ab62f8e598967dd37f8
     }
   }
 }
